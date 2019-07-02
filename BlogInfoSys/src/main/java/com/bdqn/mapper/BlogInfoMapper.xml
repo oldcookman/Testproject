@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.BlogInfoDao">
+	<resultMap id="BaseResultMap" type="BlogInfo">
+		<id column="blogInfoId" property="blogInfoId"/>
+		<result column="blogTitle" property="blogTitle"/>
+		<result column="blogText" property="blogText"/>
+		<result column="blogClickCount" property="blogClickCount"/>
+		<result column="blogDate" property="blogDate"/>
+	</resultMap>
+	<resultMap id="FullResultMap" type="BlogInfo" extends="BaseResultMap">
+		<association property="blogType" resultMap="com.bdqn.dao.BlogTypeDao.FullResultMap"/>
+	</resultMap>
+	<select id="getTop50ClickCount" resultMap="FullResultMap">
+		select blogInfoId,blogTypeName,blogTitle,userName,blogClickCount from bloginfo bi
+		INNER JOIN blogtype bt on bi.blogTypeId = bt.blogTypeId
+		INNER JOIN userinfo ui on ui.userId = bt.userId
+		ORDER BY blogClickCount DESC
+		LIMIT 50
+	</select>
+	<select id="getDetailByBlogInfoId" resultMap="FullResultMap">
+		SELECT * from bloginfo bi
+		INNER JOIN blogtype bt on bi.blogtypeId = bt.blogTypeId
+		INNER JOIN userinfo ui on ui.userId = bt.userId
+		where bi.bloginfoId=#{blogInfoId}
+	</select>
+	<select id="getBlogInfobyUserId" resultMap="FullResultMap">
+		SELECT * from bloginfo bi
+		INNER JOIN blogtype bt on bt.blogTypeId=bi.blogTypeId
+		where userId=#{userId}
+		ORDER BY blogDate DESC
+	</select>
+	<insert id="addBlogInfo">
+		insert into blogInfo values(#{blogInfoId},#{blogTitle},#{blogText},#{blogType.blogTypeId},#{blogClickCount},#{blogDate})
+	</insert>
+</mapper>
+

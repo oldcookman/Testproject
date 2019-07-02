@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.UserInfoDao">
+	<resultMap id="BaseResultMap" type="UserInfo">
+		<id column="userId" property="userId"/>
+		<result column="userName" property="userName"/>
+		<result column="userPwd" property="userPwd"/>
+		<result column="userAge" property="userAge"/>
+		<result column="userSex" property="userSex"/>
+		<result column="userImg" property="userImg"/>
+		<result column="userDate" property="userDate"/>
+	</resultMap>
+	
+	<select id="getUserInfoByUser" resultType="UserInfo">
+		select * from UserInfo where userName=#{userName} and userPwd=#{userPwd}
+	</select>
+	<insert id="addUserInfo">
+		insert into UserInfo values(#{userId}, #{userName}, #{userPwd}, #{userAge}, #{userSex}, #{userImg}, #{userDate})
+	</insert>
+</mapper>
+

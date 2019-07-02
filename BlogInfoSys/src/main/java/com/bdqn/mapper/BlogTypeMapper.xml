@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.dao.BlogTypeDao">
+	<resultMap id="BaseResultMap" type="BlogType">
+		<id column="blogTypeId" property="blogTypeId"/>
+		<result column="blogTypeName" property="blogTypeName"/>
+		<result column="blogTypeDate" property="blogTypeDate"/>
+	</resultMap>
+
+	<resultMap id="FullResultMap" type="BlogType" extends="BaseResultMap">
+		<association property="userInfo" resultMap="com.bdqn.dao.UserInfoDao.BaseResultMap"/>
+	</resultMap>
+	<!-- 
+		List
+			Map
+				blogTypeId	1000
+				blogTypeName	mobile
+				blogInfoCount	5
+			Map
+				blogTypeId	1000
+				blogTypeName	mobile
+				blogInfoCount	5
+			Map
+		
+		
+		List
+			Student
+				stuid 100
+				stuName	zhangsan
+			Student
+	 -->
+	<select id="getBlogTypeByuserId" resultType="Map">
+		select bt.blogTypeId,blogTypeName,count(blogInfoId) blogTypeCount from blogtype bt
+		LEFT JOIN bloginfo bi on bi.blogTypeId=bt.blogTypeId
+		where userId='33f53a5ecc6446609228b5e26000888a'
+		GROUP BY bt.blogTypeId,blogTypeName
+		ORDER BY blogTypeCount desc
+	</select>
+	<select id="getBlogTypeAllByUserId" resultMap="FullResultMap">
+		select * FROM blogtype where userId=#{userId}
+	</select>
+	<insert id="addBlogType">
+	 insert into blogType values(#{blogTypeId},#{blogTypeName},#{userInfo.userId},now())
+	</insert>
+	 
+</mapper>
+
